@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  app:
+    image: 'interview-planning:latest'
+    build:
+      dockerfile: Dockerfile
+    container_name: application
+    ports:
+      - ${APPLICATION_PORT}:${APPLICATION_PORT}
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_NAME}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASS}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=${SPRING_JPA_HIBERNATE_DDL_AUTO}
+      - CURRENT_TIMEZONE=${TIME_ZONE}
+      - SERVER_PORT=${APPLICATION_PORT}
+
+  db:
+    image: 'postgres:latest'
+    container_name: db
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    environment:
+      - POSTGRES_DB=${POSTGRES_NAME}
+      - POSTGRES_USER=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASS}
